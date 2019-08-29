@@ -1,5 +1,10 @@
 const agendaRoutes = (app, fs) => {
     const dataService = require('./class');
+    
+    //convertendo para poder comparar 
+    function tranformaData(data){
+        return parseInt(data.split("-")[2].toString() + data.split("-")[1].toString() + data.split("-")[0].toString());
+    }
 
     //lIST-ALL
     app.get('/listAll', async(req, res) => {
@@ -95,27 +100,33 @@ const agendaRoutes = (app, fs) => {
         try {
             var busca1 = req.params.data1;
             var busca2 = req.params.data2;
+
+            var nova_data1 = tranformaData(busca1);
+            var nova_data2 = tranformaData(busca2);
+            
             var aux;
             const data = await dataService.readAgenda();
             var test;
             var periodo = [];    
             
-            if(busca1 > busca2){
-                aux = busca1;
-                busca1 = busca2;
-                busca2 = aux;
+            if(nova_data1 > nova_data2){
+                aux = nova_data1;
+                nova_data1 = nova_data2;
+                nova_data2 = aux;
             }
             
             
             data.forEach(function(elemento) {
-                if (elemento.day == busca1 || elemento.day == busca2) {
+                var dayElemet = elemento.day;
+                var new_dayElemento = tranformaData(dayElemet);
+                if (new_dayElemento == nova_data1 || new_dayElemento == nova_data2) {
                     test = 1;                    
                     periodo.push(elemento);
                 }
-                if(elemento.day > busca1 && elemento.day < busca2){
+                if(new_dayElemento > nova_data1 && new_dayElemento < nova_data2){
                     test = 1;                    
                     periodo.push(elemento);                       
-                }                                               
+                }                                             
             });
             if (test != 1) {
                 res.send('Sem horário disponivel para este período!');
