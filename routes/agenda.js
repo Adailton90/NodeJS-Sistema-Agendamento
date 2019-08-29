@@ -8,9 +8,9 @@ const agendaRoutes = (app, fs) => {
             return res.send(data);
 
         } catch (error) {
-            return res.status(400).send({error: 'Erro nos reistros da Agenda'});
+            return res.status(400).json({ error: 'Erro nos reistros da Agenda' });
         }
-        
+
     });
 
 
@@ -20,21 +20,21 @@ const agendaRoutes = (app, fs) => {
             const busca = req.params.id;
             const data = await dataService.redyAgenda();
             var test = 0;
-            data.forEach(function(elemento){
+            data.forEach(function(elemento) {
                 var intervalo = elemento.intervals;
-                intervalo.forEach(function(index){
-                    if(index.id == busca){     
+                intervalo.forEach(function(index) {
+                    if (index.id == busca) {
                         test = 1;
-                        res.send(index);         
-                    }                 
-                });                                   
-                 
+                        res.send(index);
+                    }
+                });
+
             });
-            if(test != 1){
+            if (test != 1) {
                 res.send('ID informado nao é validao');
             }
         } catch (error) {
-            return res.status(400).send({error: 'Erro ao tentar localizar horario na agenda'});
+            return res.status(400).json({ error: 'Erro ao tentar localizar horario na agenda' });
         }
     });
 
@@ -45,93 +45,116 @@ const agendaRoutes = (app, fs) => {
             const data = await dataService.redyAgenda();
             var test = 0;
 
-            data.forEach(function(elemento){
-                if(elemento.day == busca){
-                    test = 1; 
-                    var horarios =  elemento.intervals; 
-                    var response = {status: 'Horários disponíveis para esta data', horarios};                 
+            data.forEach(function(elemento) {
+                if (elemento.day == busca) {
+                    test = 1;
+                    let horarios = elemento.intervals;
+                    let response = { status: 'Horários disponíveis para esta data', horarios };
                     res.send(response);
-                }                        
-                
-            });   
-            if(test != 1){
-                res.send('Todos horários estão livre para esta data, deseja agendar?');
-            }            
+                }
+
+            });
+            if (test != 1) {
+                res.send('Não a horários disponíveis para esta data');
+            }
         } catch (error) {
-            return res.status(400).send({error: 'Erro ao tentar localizar evento na agenda'});
+            return res.status(400).json({ error: 'Erro ao tentar localizar evento na agenda' });
         }
     });
 
-    app.get('/listAllByHours/:start&end', async(req, res) => {
+    app.get('/listAllByHours/:start/:end', async(req, res) => {
         try {
             const busca1 = req.params.start;
-            //const busca2 = req.params.end;
+            const busca2 = req.params.end;
             const data = await dataService.redyAgenda();
             var test;
-            console.log(busca1);
-            /*
-            data.forEach(function(elemento){
+            var datas = [];
+            data.forEach(function(elemento) {
                 var intervalo = elemento.intervals;
-                intervalo.forEach(function(index){
-                    if(index.start == busca.start &&  index.end == busca.end){     
+                intervalo.forEach(function(index) {
+                    if (index.start == busca1 && index.end == busca2) {
                         test = 1;
-                        console.log(index);         
-                    }                 
-                });                 
-                
-            });  
-            res.send(busca1);
-            if(test != 1){
-                res.send('Todos horários estão livre para esta data, deseja agendar?');
-            }    */        
+                        let day = elemento.day;
+                        datas.push(day);
+                    }
+                });
+            });
+            if (test != 1) {
+                res.send('Não a data disponível nesse intervalo de horário.');
+            }
+            let response = { status: 'Datas disponíveis para o intervalo de horário informado', datas };
+            return res.send(response);
+
         } catch (error) {
-            return res.status(400).send({error: 'Erro ao tentar localizar evento na agenda'});
+            return res.status(400).json({ error: 'Erro ao tentar localizar evento na agenda.' });
         }
     });
 
-     //DELETE
-     app.delete('/sistemaDeAgendamento/:id', async(req, res) => {
+    app.get('/listDateRanges/:data1/:data2', async(req, res) => {
+        try {
+            const busca1 = req.params.data1;
+            const busca2 = req.params.data2;
+            const data = await dataService.redyAgenda();
+            var test;
+            var periodo = [];
+            data.forEach(function(elemento) {
+                if (elemento.day == busca1 || elemento.day == busca2) {
+                    test = 1;
+                    console.log(elemento);
+                    periodo.push(elemento);
+                }
+            });
+            if (test != 1) {
+                res.send('Sem horário disponivel para este período!');
+            }
+            let response = { status: 'Período disponível', periodo };
+            return res.send(response);
+
+        } catch (error) {
+            return res.status(400).json({ error: 'Erro ao tentar localizar evento na agenda.' });
+        }
+    });
+
+
+
+    //DELETE
+    app.delete('/sistemaDeAgendamento/:id', async(req, res) => {
         try {
             const busca = req.params.id;
             const data = await dataService.redyAgenda();
-            
-           // 
-           data.forEach(function(elemento){
-               var intervalo = elemento.intervals;
-               intervalo.forEach(function(index){
-                   if(index.id === busca){     
-                        res.send('evento deletado');                   
-                   };                    
-               });                                      
-                
-            });   
-              
+
+            // 
+            data.forEach(function(elemento) {
+                var intervalo = elemento.intervals;
+                intervalo.forEach(function(index) {
+                    if (index.id == busca) {
+                        res.send('evento deletado!!');
+                    };
+                });
+
+            });
 
         } catch (error) {
-            return res.status(400).send({error: 'Erro ao tentar cadastrar'});
+            return res.status(400).json({ error: 'Erro ao tentar cadastrar.' });
         }
-        
-        
-    });
 
-    
+
+    });
 
     //CADASTRO
     app.post('/sistemaDeAgendamento', async(req, res) => {
         try {
             const { body: data } = req;
             const agendaAtual = await dataService.redyAgenda();
+
             agendaAtual.push(data);
 
             const retorno = await dataService.saveAgenda(agendaAtual);
-            //var response = {status:'horário inserido na agenda!', resultado: retorno}
             return res.send('horário inserido na agenda!');
 
         } catch (error) {
-            return res.status(400).send({error: 'Erro ao tentar cadastrar'});
+            return res.status(400).json({ error: 'Erro ao tentar cadastrar' });
         }
-        
-        
     });
 
 };
