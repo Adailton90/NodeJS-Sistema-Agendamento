@@ -19,7 +19,7 @@ module.exports = {
         });
     },
 
-    redyAgenda: () => {
+    readAgenda: () => {
         return new Promise((resolve, reject) => {
             try {
                 fs.readFile(agendaPath, (err, data) => {

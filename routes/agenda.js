@@ -2,9 +2,9 @@ const agendaRoutes = (app, fs) => {
     const dataService = require('./class');
 
     //lIST-ALL
-    app.get('/sistemaDeAgendamento', async(req, res) => {
+    app.get('/listAll', async(req, res) => {
         try {
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
             return res.send(data);
 
         } catch (error) {
@@ -15,10 +15,10 @@ const agendaRoutes = (app, fs) => {
 
 
     //LIST-BY-ID
-    app.get('/sistemaDeAgendamento/:id', async(req, res) => {
+    app.get('/listByID/:id', async(req, res) => {
         try {
             const busca = req.params.id;
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
             var test = 0;
             data.forEach(function(elemento) {
                 var intervalo = elemento.intervals;
@@ -31,7 +31,7 @@ const agendaRoutes = (app, fs) => {
 
             });
             if (test != 1) {
-                res.send('ID informado nao é validao');
+                res.send('ID informado não é validao');
             }
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar localizar horario na agenda' });
@@ -42,7 +42,7 @@ const agendaRoutes = (app, fs) => {
     app.get('/listByDay/:day', async(req, res) => {
         try {
             const busca = req.params.day;
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
             var test = 0;
 
             data.forEach(function(elemento) {
@@ -55,7 +55,8 @@ const agendaRoutes = (app, fs) => {
 
             });
             if (test != 1) {
-                res.send('Não a horários disponíveis para esta data');
+                var msg = 'Não a horários disponíveis para esta data';
+                res.send(msg);
             }
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar localizar evento na agenda' });
@@ -66,7 +67,7 @@ const agendaRoutes = (app, fs) => {
         try {
             const busca1 = req.params.start;
             const busca2 = req.params.end;
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
             var test;
             var datas = [];
             data.forEach(function(elemento) {
@@ -94,9 +95,12 @@ const agendaRoutes = (app, fs) => {
         try {
             const busca1 = req.params.data1;
             const busca2 = req.params.data2;
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
             var test;
             var periodo = [];
+            var valorData = data.day.substring(0,1);
+            console.log(valorData);
+            
             data.forEach(function(elemento) {
                 if (elemento.day == busca1 || elemento.day == busca2) {
                     test = 1;
@@ -118,10 +122,10 @@ const agendaRoutes = (app, fs) => {
 
 
     //DELETE
-    app.delete('/sistemaDeAgendamento/:id', async(req, res) => {
+    app.delete('/deleteByID/:id', async(req, res) => {
         try {
             const busca = req.params.id;
-            const data = await dataService.redyAgenda();
+            const data = await dataService.readAgenda();
 
             // 
             data.forEach(function(elemento) {
@@ -145,7 +149,7 @@ const agendaRoutes = (app, fs) => {
     app.post('/sistemaDeAgendamento', async(req, res) => {
         try {
             const { body: data } = req;
-            const agendaAtual = await dataService.redyAgenda();
+            const agendaAtual = await dataService.readAgenda();
 
             agendaAtual.push(data);
 
