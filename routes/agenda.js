@@ -139,48 +139,43 @@ const agendaRoutes = (app, fs) => {
         }
     });
 
-
-
-    //DELETE
-    app.delete('/deleteByID/:id', async(req, res) => {
+    //DELETE's
+    app.delete('/deleteRegister/:day/:start/:end', async(req, res) => {
         try {
-            const busca = req.params.id;
-            const data = await dataService.readAgenda();
-
-            // 
-            data.forEach(function(elemento) {
-                var intervalo = elemento.intervals;
-                intervalo.forEach(function(index) {
-                    if (index.id == busca) {
-                        res.send('evento deletado!!');
-                    };
-                });
-
-            });
-
+            const buscaDay = req.params.day;
+            const buscaStart = req.params.start;
+            const buscaEnd = req.params.end;
+            var data = await dataService.readAgenda();
+            
+            data = data.filter(obj => obj.day != buscaDay && obj.start != buscaStart && obj.end != buscaEnd);            
+            console.log(data);
+            dataService.saveAgenda(data);
+            
+            res.send('Registro Deletado');
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar cadastrar.' });
         }
-
-
     });
 
     //CADASTRO
-    app.post('/sistemaDeAgendamento', async(req, res) => {
+    app.post('/registerRule', async(req, res) => {
         try {
-            const { body: data } = req;
-            const agendaAtual = await dataService.readAgenda();
+            const { body: register } = req;
+            const data = await dataService.readAgenda();
 
-            agendaAtual.push(data);
-
-            const retorno = await dataService.saveAgenda(agendaAtual);
-            return res.send('horário inserido na agenda!');
+            var test = data.filter(obj => obj.day == register.day && obj.start == register.start && obj.end == register.end);            
+            console.log(test);
+            if(test.length != 0){
+                return res.status(400).json({ error: 'Registro ja existe' });
+            };
+            data.push(register);
+            const retorno = await dataService.saveAgenda(data);
+            return res.status(200).json({ sucesso: 'Horário cadastrado com suesso' });                      
 
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar cadastrar' });
         }
     });
-
 };
 
 
