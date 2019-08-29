@@ -96,17 +96,27 @@ const agendaRoutes = (app, fs) => {
             const busca1 = req.params.data1;
             const busca2 = req.params.data2;
             const data = await dataService.readAgenda();
+
+
             var test;
-            var periodo = [];
-            var valorData = data.day.substring(0,1);
-            console.log(valorData);
+            var periodo = [];         
+            
             
             data.forEach(function(elemento) {
                 if (elemento.day == busca1 || elemento.day == busca2) {
                     test = 1;
-                    console.log(elemento);
+                    //console.log(valor2);
                     periodo.push(elemento);
+                }else{
+                    if(elemento.day > busca1 ){
+                        periodo.push(elemento);
+                    }else{
+                        if(elemento.day < busca2){
+                            periodo.push(elemento);
+                        }
+                    }
                 }
+                
             });
             if (test != 1) {
                 res.send('Sem horário disponivel para este período!');
