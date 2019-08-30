@@ -25,7 +25,7 @@ Através do verbo http 'GET' a requisição /listDateRanges/:data1/:data2 retorn
 
 <b><h3>Requisição: /deleteRegister/:day/:start/:end</h3></b>
 
-Através do verbo http 'DELETE' a requisição /deleteRegister/:day/:start/:end deleta um registro salvo no arquivo 'agenda.json baseado nos parâmetros passados nos campos "VALUE" da aba "Params" do Posman, sendo "day" a data, "start" a hora inicial e "end" a hora final formando uma chave composta de identificação unica.
+Através do verbo http 'DELETE' a requisição /deleteRegister/:day deleta um registro salvo no arquivo 'agenda.json baseado na data passada no campo "VALUE" da aba "Params" do Posman, sendo "day" a data.
 
 <b><h3>Requisição: /registerRule</h3></b>
 
