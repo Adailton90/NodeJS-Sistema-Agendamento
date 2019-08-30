@@ -1,6 +1,7 @@
 const agendaRoutes = (app, fs) => {
     const dataService = require('./class');
 
+
     //convertendo para poder comparar 
     function tranformaData(data) {
         return parseInt(data.split("-")[2].toString() + data.split("-")[1].toString() + data.split("-")[0].toString());
@@ -64,7 +65,7 @@ const agendaRoutes = (app, fs) => {
             if (test != 1) {
                 return res.json({ resposta: 'Não a data diponiveis para este intervalo de horário' });
             }
-            let response = { status: 'Datas disponíveis para o intervalo de horário informado', datas };
+            let response = { status: 'Datas disponíveis para este intervalo de horário informado', datas };
             return res.send(response);
 
         } catch (error) {
@@ -91,8 +92,6 @@ const agendaRoutes = (app, fs) => {
                 nova_data1 = nova_data2;
                 nova_data2 = aux;
             }
-
-
             data.forEach(function(elemento) {
                 var dayElemet = elemento.day;
                 var new_dayElemento = tranformaData(dayElemet);
@@ -120,16 +119,19 @@ const agendaRoutes = (app, fs) => {
     app.delete('/deleteRegister/:day', async(req, res) => {
         try {
             const buscaDay = req.params.day;
-            const buscaStart = req.params.start;
-            const buscaEnd = req.params.end;
             var data = await dataService.readAgenda();
+            var test = data.length;
 
-            data = data.filter(obj => obj.day != buscaDay);
+            data = data.filter(obj => obj.day != buscaDay)
+            if (test == data.length) {
+                return res.status(400).json({ error: 'Não existe este registro!' });
+            }
             dataService.saveAgenda(data);
-
             return res.send('Registro Deletado');
+
+
         } catch (error) {
-            return res.status(400).json({ error: 'Erro ao tentar cadastrar.' });
+            return res.status(400).json({ error: 'Erro ao tentar deletar.' });
         }
     });
 
@@ -142,11 +144,12 @@ const agendaRoutes = (app, fs) => {
 
             test = data.filter(obj => obj.day == register.day);
             if (test.length != 0) {
-                res.status(400).json({ error: 'Este item ja foi cadastrado anteriormente!' });
-            };
+                return res.status(400).json({ error: 'Este item ja foi cadastrado anteriormente!' });
+            }
             data.push(register);
-            const retorno = await dataService.saveAgenda(data);
+            let retorno = await dataService.saveAgenda(data);
             return res.status(200).json({ sucesso: 'Registro cadastrado com suesso!' });
+
 
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar cadastrar' });
