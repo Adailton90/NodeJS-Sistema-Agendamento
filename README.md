@@ -29,7 +29,7 @@ Através do verbo http 'DELETE' a requisição /deleteRegister/:day/:start/:end 
 
 <b><h3>Requisição: /registerRule</h3></b>
 
-Através do verbo http 'POST' a requisição /registerRule é salvo o registro no arquivo 'agenda.json' baseado nos parametros passados na aba "Body" preenchendo no formato JSON as chaves e valores. Exemplo.:{
+Através do verbo http 'POST' a requisição /registerRule é salvo o registro no arquivo 'agenda.json' baseado nos parametros passados na aba "Body" preenchendo no formato JSON as chaves e valores. <br>Exemplo.:<br>{
         "day": "02-10-2019",
         "intervals": [
             {
