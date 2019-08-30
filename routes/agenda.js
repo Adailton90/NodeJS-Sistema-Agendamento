@@ -138,15 +138,15 @@ const agendaRoutes = (app, fs) => {
         try {
             const { body: register } = req;
             const data = await dataService.readAgenda();
-            var test;
+            var test = [];
 
             test = data.filter(obj => obj.day == register.day);
             if (test.length != 0) {
-                res.status(400).json({ error: 'Registro ja existe' });
+                res.status(400).json({ error: 'Este item ja foi cadastrado anteriormente!' });
             };
             data.push(register);
             const retorno = await dataService.saveAgenda(data);
-            return res.status(200).json({ sucesso: 'Horário cadastrado com suesso' });
+            return res.status(200).json({ sucesso: 'Registro cadastrado com suesso!' });
 
         } catch (error) {
             return res.status(400).json({ error: 'Erro ao tentar cadastrar' });
