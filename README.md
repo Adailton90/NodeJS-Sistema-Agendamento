@@ -1,8 +1,8 @@
 # NodeJS-Sistema-Agendamento
 
 Este projeto se trata de uma API REST para facilitar o gerenciamento de horários de uma "clínica"!
-Os dados cadastrados são armazenados em u marquivo ".JSON" e
-as requisições devem ser enviados na forma de uma Postman (https://www.getpostman.com/) collection.
+Os dados cadastrados são armazenados em u marquivo ".JSON", <b>os
+endpoints podem ser usados através de um clinet rest como Postman (https://www.getpostman.com/) collection ou por qualquer outro sistema capaz de consumir API REST.
 
 <h2>Relação de requisições.</h3>
 
