@@ -117,14 +117,14 @@ const agendaRoutes = (app, fs) => {
     });
 
     //DELETE's - OK
-    app.delete('/deleteRegister/:day/:start/:end', async(req, res) => {
+    app.delete('/deleteRegister/:day', async(req, res) => {
         try {
             const buscaDay = req.params.day;
             const buscaStart = req.params.start;
             const buscaEnd = req.params.end;
             var data = await dataService.readAgenda();
 
-            data = data.filter(obj => obj.day != buscaDay && obj.start != buscaStart && obj.end != buscaEnd);
+            data = data.filter(obj => obj.day != buscaDay);
             dataService.saveAgenda(data);
 
             return res.send('Registro Deletado');
@@ -138,11 +138,12 @@ const agendaRoutes = (app, fs) => {
         try {
             const { body: register } = req;
             const data = await dataService.readAgenda();
-            var test = data.filter(obj => obj.day == register.day && obj.end == register.end && obj.start == register.start);
-            if (test.length != 0) {
-                return res.status(400).json({ error: 'Registro ja existe' });
-            };
+            var test;
 
+            test = data.filter(obj => obj.day == register.day);
+            if (test.length != 0) {
+                res.status(400).json({ error: 'Registro ja existe' });
+            };
             data.push(register);
             const retorno = await dataService.saveAgenda(data);
             return res.status(200).json({ sucesso: 'Horário cadastrado com suesso' });
