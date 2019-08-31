@@ -23,9 +23,9 @@ Através do verbo http 'GET' a requisição /listAllByHours/:start/ retorna todo
 
 Através do verbo http 'GET' a requisição /listDateRanges/:data1/:data2 retorna os dias e horários disponíveis salvos no arquivo 'agenda.json' dentro de um intervalo de datas(Ex.: de 20-10-2019 a 25-10-2019) passadas nos campos "VALUE" da aba "Params" do Posman, sendo "data1" a data inicial e "data2" a data final.
 
-<b><h3>Requisição: /deleteRegister/:day/:start/:end</h3></b>
+<b><h3>Requisição: /deleteRegister/:day</h3></b>
 
-Através do verbo http 'DELETE' a requisição /deleteRegister/:day deleta um registro salvo no arquivo 'agenda.json baseado na data passada no campo "VALUE" da aba "Params" do Posman, sendo "day" a data.
+Através do verbo http 'DELETE' a requisição /deleteRegister/:day deleta um registro salvo no arquivo 'agenda.json baseado na data passada no campo "VALUE" da aba "Params" do Posman, sendo "day" a data que deseja deletar (Ex.:23-09-2019).
 
 <b><h3>Requisição: /registerRule</h3></b>
 
