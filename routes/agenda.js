@@ -24,7 +24,7 @@ const agendaRoutes = (app, fs) => {
         try {
             const busca = req.params.day;
             const data = await dataService.readAgenda();
-            var test = 0;
+            let test = 0;
 
             data.forEach(function(elemento) {
                 if (elemento.day == busca) {
@@ -50,14 +50,14 @@ const agendaRoutes = (app, fs) => {
             const busca1 = req.params.start;
             const busca2 = req.params.end;
             const data = await dataService.readAgenda();
-            var test;
-            var datas = [];
+            let test;
+            let datas = [];
             data.forEach(function(elemento) {
-                var intervalo = elemento.intervals;
+                let intervalo = elemento.intervals;
                 intervalo.forEach(function(index) {
                     if (index.start == busca1 && index.end == busca2) {
                         test = 1;
-                        var day = elemento.day;
+                        let day = elemento.day;
                         datas.push(day);
                     }
                 });
@@ -76,16 +76,16 @@ const agendaRoutes = (app, fs) => {
     //LIST RANGES BY DAYS - OK
     app.get('/listDateRanges/:data1/:data2', async(req, res) => {
         try {
-            var busca1 = req.params.data1;
-            var busca2 = req.params.data2;
+            let busca1 = req.params.data1;
+            let busca2 = req.params.data2;
 
-            var nova_data1 = tranformaData(busca1);
-            var nova_data2 = tranformaData(busca2);
+            let nova_data1 = tranformaData(busca1);
+            let nova_data2 = tranformaData(busca2);
 
-            var aux;
+            let aux;
             const data = await dataService.readAgenda();
-            var test;
-            var periodo = [];
+            let test;
+            let periodo = [];
 
             if (nova_data1 > nova_data2) {
                 aux = nova_data1;
@@ -93,8 +93,8 @@ const agendaRoutes = (app, fs) => {
                 nova_data2 = aux;
             }
             data.forEach(function(elemento) {
-                var dayElemet = elemento.day;
-                var new_dayElemento = tranformaData(dayElemet);
+                let dayElemet = elemento.day;
+                let new_dayElemento = tranformaData(dayElemet);
                 if (new_dayElemento == nova_data1 || new_dayElemento == nova_data2) {
                     test = 1;
                     periodo.push(elemento);
@@ -119,8 +119,8 @@ const agendaRoutes = (app, fs) => {
     app.delete('/deleteRegister/:day', async(req, res) => {
         try {
             const buscaDay = req.params.day;
-            var data = await dataService.readAgenda();
-            var test = data.length;
+            let data = await dataService.readAgenda();
+            let test = data.length;
 
             data = data.filter(obj => obj.day != buscaDay)
             if (test == data.length) {
@@ -140,7 +140,7 @@ const agendaRoutes = (app, fs) => {
         try {
             const { body: register } = req;
             const data = await dataService.readAgenda();
-            var test = [];
+            let test = [];
 
             test = data.filter(obj => obj.day == register.day);
             if (test.length != 0) {
